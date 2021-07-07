@@ -1,5 +1,4 @@
 # python version: 3.7
-import itertools
 
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -36,10 +35,10 @@ def main():
     k_list = [1, 3, 5, 7, 9]   # the k values that will be use on the KNN classifier
     p_list = [1, 2, 'inf']     # the p values for computing lp distance
 
-    k_train_err = [[] for i in range(5)]  # list of 5 lists which contain all the errors for k = 1,3,5,7,9 accordingly
-    k_test_err = [[] for i in range(5)]
-    p_train_err = [[] for i in range(3)]  #  "   "  3   "     "      "     "    "    "    "  p = 1,2,inf       "
-    p_test_err = [[] for i in range(3)]
+    k_train_err = [[] for _ in range(5)]  # list of 5 lists which contain all the errors for k = 1,3,5,7,9 accordingly
+    k_test_err = [[] for _ in range(5)]
+    p_train_err = [[] for _ in range(3)]  #  "   "  3   "     "      "     "    "    "    "  p = 1,2,inf       "
+    p_test_err = [[] for _ in range(3)]
 
     # k_p_list = list(itertools.product(k_list, p_list))   # all the combinations of k and p
     # k_p_errors = []
@@ -47,11 +46,21 @@ def main():
     iterations = 50  # change to 100!
 
     for i in range(iterations):
+
+        print("################################################\n"
+              "iteration #", i, "/", iterations, "...\n"
+              "################################################")
+
+        # Split the data randomly into 0.5 training-set and 0.5 testing-set
+        X_train, X_test, y_train, y_test = train_test_split(points_df, labels_df, test_size=0.5, shuffle=True)
+
         k_ind = 0
         for k in k_list:
             p_ind = 0
             for p in p_list:
-                train_err, test_err = run(points_df, labels_df, k, p)
+
+                # evaluate the KNN classifier on the test set, under the lp distance
+                train_err, test_err = run(X_train, X_test, y_train, y_test, k, p)
 
                 k_train_err[k_ind].append(train_err)
                 k_test_err[k_ind].append(test_err)
@@ -82,6 +91,8 @@ def main():
         print("average train error: ", p_train_err[p_ind])
         print("average test error: ", p_test_err[p_ind])
         print("---")
+
+    print()
 
 
 if __name__ == '__main__':
