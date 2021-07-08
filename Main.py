@@ -2,6 +2,8 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+
 from KNN import *
 
 
@@ -51,7 +53,7 @@ def main():
     # k_p_list = list(itertools.product(k_list, p_list))   # all the combinations of k and p
     # k_p_errors = []
 
-    iterations = 100
+    iterations = 60  # asked 100
 
     for i in range(iterations):
 
@@ -87,7 +89,7 @@ def main():
 
     # print the average empirical and true errors for each p and k
 
-    for k_ind in range(k_list):
+    for k_ind in range(len(k_list)):
         print("k = ", k_list[k_ind])
         print("average train error: ", k_train_err[k_ind])
         print("average test error: ", k_test_err[k_ind])
@@ -95,13 +97,13 @@ def main():
 
     print()
 
-    for p_ind in range(p_list):
+    for p_ind in range(len(p_list)):
         print("p = ", p_list[p_ind])
         print("average train error: ", p_train_err[p_ind])
         print("average test error: ", p_test_err[p_ind])
         print("---")
 
-    plot_err([*range(1, 9)], k_train_err, k_test_err)
+    plot_err(k_list, k_train_err, k_test_err)
 
 
 if __name__ == '__main__':

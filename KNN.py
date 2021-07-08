@@ -1,4 +1,3 @@
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 import numpy as np
 
@@ -63,9 +62,30 @@ def run(X_train, X_test, y_train, y_test, k, p):
         prediction = predict(x, y, X_train, y_train, k, p)
         y_pred.append(prediction)  # add the prediction at the end of the list
 
-    classifier_err = mean_squared_error(y_test, y_pred)
+    test_err = mean_squared_error(y_test, y_pred)
     print("____________________________________________________\n"
           "The test error of classifier with parameters k =", k, " and p =", p, "is:\n",
-          classifier_err)
+          test_err)
 
-    return mean_squared_error(y_train, y_train), classifier_err
+    if k == 1:
+        # the nearest neighbor of a point in the training set is the point itself (with distance=0, for every p).
+        # so of course the label we'll choose for it is the true label - we are never make a mistake here.
+        train_err = 0
+
+    else:
+        # repeat the process that for the X_train set now
+
+        y_pred = []  # predictions for each point on X_train
+
+        for i in range(X_train.shape[0]):  # for each row
+            x = X_train.iloc[i].loc['x']
+            y = X_train.iloc[i].loc['y']
+            prediction = predict(x, y, X_train, y_train, k, p)  # the base set is still the training set
+            y_pred.append(prediction)  # add the prediction at the end of the list
+
+        train_err = mean_squared_error(y_train, y_pred)
+
+    print("The empirical error of classifier with parameters k =", k, " and p =", p, "is:\n",
+            train_err)
+
+    return train_err, test_err
