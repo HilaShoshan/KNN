@@ -15,9 +15,17 @@ def average(lst):
     return sum(lst) / len(lst)
 
 
-## add plot_err function!
-## plot the k errors as a function of k values
-## same to p
+def plot_err(vals_range, train_err, test_err):
+    """
+    plot the k errors as a function of k values
+    """
+    plt.title("The average empirical and true errors as a function of k")
+    plt.xlabel('k values')
+    plt.ylabel('prediction error')
+    plt.plot(vals_range, train_err, color='blue', linewidth=3, label='train error')
+    plt.plot(vals_range, test_err, color='red', linewidth=3, label='test error')
+    plt.legend()
+    plt.show()
 
 
 def main():
@@ -43,7 +51,7 @@ def main():
     # k_p_list = list(itertools.product(k_list, p_list))   # all the combinations of k and p
     # k_p_errors = []
 
-    iterations = 50  # change to 100!
+    iterations = 100
 
     for i in range(iterations):
 
@@ -65,10 +73,11 @@ def main():
                 k_train_err[k_ind].append(train_err)
                 k_test_err[k_ind].append(test_err)
                 p_train_err[p_ind].append(train_err)
-                p_train_err[p_ind].append(test_err)
+                p_test_err[p_ind].append(test_err)
 
                 p_ind += 1
             k_ind += 1
+        print('\n')
 
     # map each sub-list of errors to it's average
     k_train_err = list(map(lambda lst: average(lst), k_train_err))
@@ -92,7 +101,7 @@ def main():
         print("average test error: ", p_test_err[p_ind])
         print("---")
 
-    print()
+    plot_err([*range(1, 9)], k_train_err, k_test_err)
 
 
 if __name__ == '__main__':
